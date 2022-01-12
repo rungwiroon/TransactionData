@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Application.Commands;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 using WebApp.Pages.Validators;
 
-namespace TransactionData.Pages
+namespace WebApp.Pages
 {
     public class IndexModel : PageModel
     {
@@ -14,7 +15,7 @@ namespace TransactionData.Pages
         [Required(ErrorMessage = "Please select a file.")]
         [MaxFileSize(1 * 1024 * 1024)]
         [AllowedExtensions(new string[] { ".csv", ".xml" })]
-        public IFormFile Upload { get; set; }
+        public IFormFile? Upload { get; set; }
 
         public IndexModel(
             IHostEnvironment environment,
@@ -28,17 +29,21 @@ namespace TransactionData.Pages
         {
 
         }
-        
+
         public async Task OnPostAsync()
         {
-            if(ModelState.IsValid)
+            if (!ModelState.IsValid || Upload is null)
+                return;
+
+            using var memoryStream = new MemoryStream();
+            await Upload.CopyToAsync(memoryStream);
+
+            var records = Path.GetExtension(Upload.FileName) switch
             {
-                var file = Path.Combine(_environment.ContentRootPath, "uploads", Upload.FileName);
-                using (var fileStream = new FileStream(file, FileMode.Create))
-                {
-                    await Upload.CopyToAsync(fileStream);
-                }
-            }
+                ".csv" => Helpers.CsvHelper.Read(memoryStream),
+                ".xml" => Enumerable.Empty<TransactionItem>(),
+                _ => throw new NotSupportedException(),
+            };
         }
     }
 }

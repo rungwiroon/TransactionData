@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32104.313
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp", "WebApp\WebApp.csproj", "{5201A48F-7A76-4F04-B668-1B048C526075}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp", "WebApp\WebApp.csproj", "{5201A48F-7A76-4F04-B668-1B048C526075}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{58770563-A2E5-443D-8CE7-61E35F53F2DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{58770563-A2E5-443D-8CE7-61E35F53F2DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{E5D5AE64-0B7E-4692-8AFD-455F618A54B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{E5D5AE64-0B7E-4692-8AFD-455F618A54B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{8398D37A-3457-424D-84E2-86355F328107}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{8398D37A-3457-424D-84E2-86355F328107}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp.Tests", "WebApp.Tests\WebApp.Tests.csproj", "{180F189A-7902-4390-AC7F-F6365087AA30}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{8398D37A-3457-424D-84E2-86355F328107}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8398D37A-3457-424D-84E2-86355F328107}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8398D37A-3457-424D-84E2-86355F328107}.Release|Any CPU.Build.0 = Release|Any CPU
+		{180F189A-7902-4390-AC7F-F6365087AA30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{180F189A-7902-4390-AC7F-F6365087AA30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{180F189A-7902-4390-AC7F-F6365087AA30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{180F189A-7902-4390-AC7F-F6365087AA30}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
