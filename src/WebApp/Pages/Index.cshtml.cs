@@ -37,11 +37,12 @@ namespace WebApp.Pages
 
             using var memoryStream = new MemoryStream();
             await Upload.CopyToAsync(memoryStream);
+            memoryStream.Position = 0;
 
             var records = Path.GetExtension(Upload.FileName) switch
             {
                 ".csv" => Helpers.CsvHelper.Read(memoryStream),
-                ".xml" => Enumerable.Empty<TransactionItem>(),
+                ".xml" => Helpers.XmlHelper.Read(memoryStream),
                 _ => throw new NotSupportedException(),
             };
         }
