@@ -7,7 +7,7 @@ namespace WebApp.Helpers
 {
     public class CsvHelper
     {
-        public class TransactionItemMap : ClassMap<TransactionItem>
+        public class TransactionItemMap : ClassMap<TransactionItemDTO>
         {
             public TransactionItemMap()
             {
@@ -22,7 +22,7 @@ namespace WebApp.Helpers
             }
         }
 
-        public static IReadOnlyList<TransactionItem> Read(Stream stream)
+        public static IReadOnlyList<TransactionItemDTO> Read(Stream stream)
         {
             var config = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
@@ -37,7 +37,7 @@ namespace WebApp.Helpers
             using var reader = new StreamReader(stream);
             using var csv = new CsvReader(reader, config);
             csv.Context.RegisterClassMap<TransactionItemMap>();
-            var records = csv.GetRecords<TransactionItem>();
+            var records = csv.GetRecords<TransactionItemDTO>();
 
             return records.ToList().AsReadOnly();
         }

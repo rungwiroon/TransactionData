@@ -1,4 +1,5 @@
 using Domain;
+using Infrastructure.Repositories;
 using Marten;
 using System;
 using System.Threading.Tasks;
@@ -21,7 +22,8 @@ namespace Infrastructure.Tests
         public async Task WhenStoreRecords_ShouldHaveRowsInDb()
         {
             var store = new DocumentStore(storeOptions);
-            var repository = new TransactionRepository(store);
+            var session = store.LightweightSession();
+            var repository = new TransactionRepository(store.LightweightSession());
             var transactions1 = new Transaction[]
             {
                 new Transaction(
@@ -33,7 +35,7 @@ namespace Infrastructure.Tests
             };
 
             await repository.AddAsync(transactions1);
-            var documents1 = (await repository.GetAllTransactionsAsync());
+            var documents1 = await session.Query<Transaction>().ToListAsync();
 
             Assert.Equal(1, documents1.Count);
             Assert.Equal(new TransactionAmount(100.0m), documents1[0].Amount);
@@ -50,7 +52,7 @@ namespace Infrastructure.Tests
 
             await repository.AddAsync(transactions2);
 
-            var documents2 = (await repository.GetAllTransactionsAsync());
+            var documents2 = await session.Query<Transaction>().ToListAsync();
 
             Assert.Equal(1, documents2.Count);
             Assert.Equal(new TransactionAmount(200.0m), documents2[0].Amount);

@@ -1,34 +1,19 @@
 ﻿using Domain;
 using Marten;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Infrastructure
+namespace Infrastructure.Repositories
 {
-    public class TransactionRepository : IRepository
+    public class TransactionRepository : ITransactionRepository
     {
-        private readonly IDocumentStore store;
+        private readonly IDocumentSession session;
 
-        public TransactionRepository(IDocumentStore store)
+        public TransactionRepository(IDocumentSession session)
         {
-            this.store = store;
-        }
-
-        public async Task<IReadOnlyList<Transaction>> GetAllTransactionsAsync()
-        {
-            using var session = store.QuerySession();
-            var transactions = await session
-                .Query<Transaction>()
-                .ToListAsync();
-            return transactions;
+            this.session = session;
         }
 
         public async Task AddAsync(IEnumerable<Transaction> transactions)
         {
-            using var session = store.LightweightSession();
             session.Store(transactions);
 
             await session.SaveChangesAsync();

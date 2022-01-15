@@ -38,13 +38,13 @@ namespace WebApp.Helpers
 			public List<Transaction>? Transaction { get; set; }
 		}
 
-		public static IReadOnlyList<TransactionItem>? Read(Stream stream)
+		public static IReadOnlyList<TransactionItemDTO>? Read(Stream stream)
         {
 			var reader = new XmlSerializer(typeof(Transactions));
 			var transactions = (Transactions?)reader.Deserialize(stream);
 
 			return transactions?.Transaction
-				?.Select(tx => new TransactionItem()
+				?.Select(tx => new TransactionItemDTO()
                 {
 					TransactionID = tx.Id,
 					Amount = tx?.PaymentDetails?.Amount,

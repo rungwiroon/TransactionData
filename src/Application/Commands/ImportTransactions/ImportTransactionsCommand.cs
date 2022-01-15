@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Application.Commands
+﻿namespace Application.Commands
 {
-    public class TransactionItem
+    public class TransactionItemDTO
     {
         public string? TransactionID { get; set; }
 
@@ -21,11 +15,39 @@ namespace Application.Commands
 
     public class ImportTransactionsCommand : ICommand
     {
-        private IReadOnlyCollection<TransactionItem> _items;
+        private IEnumerable<TransactionItemDTO> _items;
 
-        public ImportTransactionsCommand(IReadOnlyCollection<TransactionItem> items)
+        private ImportTransactionsCommand(IEnumerable<TransactionItemDTO> items)
         {
             _items = items;
+        }
+
+        public ImportTransactionsCommand CreateFromCsvData(IEnumerable<TransactionItemDTO> items)
+        {
+            var mappedItems = items.Select(item => new TransactionItemDTO()
+            {
+                TransactionID = item.TransactionID,
+                Amount = item.Amount,
+                CurrencyCode = item.CurrencyCode,
+                TransactionDate = item.TransactionDate,
+                Status = item.Status,
+            });
+
+            return new ImportTransactionsCommand(mappedItems);
+        }
+
+        public ImportTransactionsCommand CreateFromXmlData(IEnumerable<TransactionItemDTO> items)
+        {
+            var mappedItems = items.Select(item => new TransactionItemDTO()
+            {
+                TransactionID = item.TransactionID,
+                Amount = item.Amount,
+                CurrencyCode = item.CurrencyCode,
+                TransactionDate = item.TransactionDate,
+                Status = item.Status,
+            });
+
+            return new ImportTransactionsCommand(mappedItems);
         }
     }
 }

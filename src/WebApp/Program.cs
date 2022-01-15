@@ -1,7 +1,14 @@
+using Application;
+using Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddInfrastructure(
+    "User ID=postgres;Password=example;Host=localhost;Port=5432;Database=transaction-data;",
+    builder.Environment.IsDevelopment());
+builder.Services.AddApplication();
 
 var app = builder.Build();
 
