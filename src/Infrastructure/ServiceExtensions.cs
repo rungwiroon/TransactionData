@@ -1,4 +1,5 @@
-﻿using Marten;
+﻿using Domain;
+using Marten;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,8 @@ namespace Infrastructure
             {
                 // Establish the connection string to your Marten database
                 options.Connection(connectionString);
+
+                DocumentMapper.Config(options);
 
                 // If we're running in development mode, let Marten just take care
                 // of all necessary schema building and patching behind the scenes
