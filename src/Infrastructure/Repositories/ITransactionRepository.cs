@@ -2,8 +2,8 @@
 
 namespace Infrastructure.Repositories
 {
-    public interface ITransactionRepository
+    public interface ITransactionRepository : IUnitOfWork
     {
-        Task AddAsync(IEnumerable<Transaction> transactions);
+        void Store(IEnumerable<Transaction> transactions);
     }
 }

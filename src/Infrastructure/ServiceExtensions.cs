@@ -1,4 +1,5 @@
-﻿using Marten;
+﻿using Infrastructure.Repositories;
+using Marten;
 using Microsoft.Extensions.DependencyInjection;
 using Weasel.Postgresql;
 
@@ -24,7 +25,12 @@ namespace Infrastructure
                 {
                     options.AutoCreateSchemaObjects = AutoCreate.All;
                 }
-            });
+            })
+            // Chained helper to replace the built in
+            // session factory behavior
+            .BuildSessionsWith<CustomSessionFactory>();
+
+            services.AddScoped<ITransactionRepository, TransactionRepository>();
 
             return services;
         }

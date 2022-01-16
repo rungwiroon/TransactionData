@@ -1,10 +1,7 @@
-﻿using Application.Queries;
+﻿using Application.Commands;
+using Application.Queries;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application
 {
@@ -14,6 +11,7 @@ namespace Application
             this IServiceCollection services)
         {
             services.AddScoped<ITransactionQueries, TransactionQueries>();
+            services.AddMediatR(typeof(ICommand));
 
             return services;
         }

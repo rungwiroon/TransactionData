@@ -11,6 +11,20 @@ namespace WebApp.Tests
     public class XmlHelperTest
     {
         [Fact]
+        public void WhenReadEmptyContent_ShouldThrowException()
+        {
+            var content = @"";
+
+            var bytes = Encoding.UTF8.GetBytes(content);
+
+            using var stream = new MemoryStream(bytes);
+
+            var act = () => Helpers.XmlHelper.Read(stream);
+
+            Assert.Throws<InvalidOperationException>(act);
+        }
+
+        [Fact]
         public void WhenReadEmptyContent_ShouldReturnEmptyList()
         {
             var content = @"

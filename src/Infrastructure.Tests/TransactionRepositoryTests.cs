@@ -34,7 +34,9 @@ namespace Infrastructure.Tests
                     TransactionStatus.A),
             };
 
-            await repository.AddAsync(transactions1);
+            repository.Store(transactions1);
+            await repository.SaveChangesAsync();
+
             var documents1 = await session.Query<Transaction>().ToListAsync();
 
             Assert.Equal(1, documents1.Count);
@@ -50,7 +52,8 @@ namespace Infrastructure.Tests
                     TransactionStatus.A),
             };
 
-            await repository.AddAsync(transactions2);
+            repository.Store(transactions2);
+            await repository.SaveChangesAsync();
 
             var documents2 = await session.Query<Transaction>().ToListAsync();
 

@@ -1,3 +1,4 @@
+using CsvHelper;
 using System;
 using System.IO;
 using System.Text;
@@ -7,6 +8,20 @@ namespace WebApp.Tests
 {
     public class CsvHelperTest
     {
+        [Fact]
+        public void WhenReadInvalidContent_ShouldThrowException()
+        {
+            var content = "sdfsfsdf";
+
+            var bytes = Encoding.ASCII.GetBytes(content);
+
+            using var stream = new MemoryStream(bytes);
+
+            var act = () => Helpers.CsvHelper.Read(stream);
+
+            Assert.ThrowsAny<ReaderException>(act);
+        }
+
         [Fact]
         public void WhenReadEmptyContent_ShouldReturnEmptyList()
         {

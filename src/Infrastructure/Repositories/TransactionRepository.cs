@@ -12,11 +12,17 @@ namespace Infrastructure.Repositories
             this.session = session;
         }
 
-        public async Task AddAsync(IEnumerable<Transaction> transactions)
+        public void SaveChanges()
+        {
+            session.SaveChanges();
+        }
+
+        public Task SaveChangesAsync(CancellationToken token = default)
+            => session.SaveChangesAsync(token);
+
+        public void Store(IEnumerable<Transaction> transactions)
         {
             session.Store(transactions);
-
-            await session.SaveChangesAsync();
         }
     }
 }

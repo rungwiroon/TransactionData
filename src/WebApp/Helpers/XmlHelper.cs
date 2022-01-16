@@ -1,4 +1,4 @@
-﻿using Application.Commands;
+﻿using Application.Commands.ImportTransactions;
 using System.Xml.Serialization;
 
 namespace WebApp.Helpers
