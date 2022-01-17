@@ -7,12 +7,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+
 builder.Services.AddMediatR(typeof(ICommand));
 
-builder.Services.AddInfrastructure(
+builder.Services.AddTransactionDataInfrastructure(
     "User ID=postgres;Password=example;Host=localhost;Port=5432;Database=transaction-data;",
     builder.Environment.IsDevelopment());
-builder.Services.AddApplication();
+builder.Services.AddTransactionDataApplication();
 
 var app = builder.Build();
 
@@ -25,6 +26,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStatusCodePagesWithReExecute("/error/{0}");
 app.UseStaticFiles();
 
 app.UseRouting();

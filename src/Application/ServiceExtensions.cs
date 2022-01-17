@@ -7,7 +7,7 @@ namespace Application
 {
     public static class ServiceExtensions
     {
-        public static IServiceCollection AddApplication(
+        public static IServiceCollection AddTransactionDataApplication(
             this IServiceCollection services)
         {
             services.AddScoped<ITransactionQueries, TransactionQueries>();

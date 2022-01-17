@@ -1,4 +1,18 @@
 ﻿@page
-@model WebApp.Pages.error._400Model
+@using System.Text.Json
+@model _400Model
 @{
+    ViewData["Title"] = "Bad Request";
+}
+<h1>400 Bad Request</h1>
+<p>File content validation failed</p>
+
+@if(TempData["errorsList"]!= null)
+{
+    var data = TempData["errorsList"] as string;
+    var errors = JsonSerializer.Deserialize<List<string>>(data);
+    foreach(var error in errors)
+    {
+        <p>@error</p>
+    }
 }

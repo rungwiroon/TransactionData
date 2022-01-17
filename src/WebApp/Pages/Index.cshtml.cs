@@ -1,10 +1,10 @@
-﻿using Application.Commands;
-using Application.Commands.ImportTransactions;
+﻿using Application.Commands.ImportTransactions;
 using CsvHelper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 using WebApp.Pages.Validators;
 
 namespace WebApp.Pages
@@ -36,25 +36,25 @@ namespace WebApp.Pages
 
         }
 
-        public async Task OnPostAsync()
+        public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid || Upload is null)
-                return;
+                return new PageResult();
 
             using var memoryStream = new MemoryStream();
             await Upload.CopyToAsync(memoryStream);
             memoryStream.Position = 0;
 
-            var import = Path.GetExtension(Upload.FileName) switch
+            var actionResultTask = Path.GetExtension(Upload.FileName) switch
             {
                 ".csv" => ImportCsv(memoryStream),
                 ".xml" => ImportXml(memoryStream),
                 _ => throw new NotSupportedException(),
             };
 
-            await import;
+            return await actionResultTask;
 
-            async Task<StatusCodeResult> ImportCsv(MemoryStream memoryStream)
+            async Task<IActionResult> ImportCsv(MemoryStream memoryStream)
             {
                 IReadOnlyList<TransactionItemDTO> transactions;
 
@@ -62,18 +62,27 @@ namespace WebApp.Pages
                 {
                     transactions = Helpers.CsvHelper.Read(memoryStream);
                 }
-                catch (InvalidOperationException)
+                catch (ReaderException)
                 {
                     return StatusCode(422);
                 }
                 
-                var request = ImportCsvFileCommand.Create(transactions);
-                await _mediator.Send(request);
+                var commandCreationResult = ImportCsvFileCommand.Create(transactions);
 
-                return StatusCode(200);
+                return await commandCreationResult.MatchAsync(
+                    RightAsync: async req =>
+                    {
+                        await _mediator.Send(req);
+                        return (IActionResult)new RedirectToPageResult("Index");
+                    },
+                    Left: errors =>
+                    {
+                        TempData["errorsList"] = JsonSerializer.Serialize(errors);
+                        return StatusCode(400);
+                    });
             }
 
-            async Task<StatusCodeResult> ImportXml(MemoryStream memoryStream)
+            async Task<IActionResult> ImportXml(MemoryStream memoryStream)
             {
                 IReadOnlyList<TransactionItemDTO>? transactions;
 
@@ -84,7 +93,7 @@ namespace WebApp.Pages
                     if (transactions == null)
                         return StatusCode(422);
                 }
-                catch(ReaderException)
+                catch(InvalidOperationException)
                 {
                     return StatusCode(422);
                 }
@@ -92,7 +101,7 @@ namespace WebApp.Pages
                 var request = ImportXmlFileCommand.Create(transactions);
                 await _mediator.Send(request);
 
-                return StatusCode(200);
+                return new RedirectToPageResult("Index");
             }
         }
     }

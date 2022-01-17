@@ -7,7 +7,7 @@ namespace Infrastructure
 {
     public static class ServiceExtensions
     {
-        public static IServiceCollection AddInfrastructure(
+        public static IServiceCollection AddTransactionDataInfrastructure(
             this IServiceCollection services,
             string connectionString,
             bool isDevelopment = false)
