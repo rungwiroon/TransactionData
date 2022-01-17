@@ -23,7 +23,7 @@ namespace WebApp.Controllers
         {
             TransactionStatus txStatus = default;
 
-            if (status != null && !Enum.TryParse(status, out txStatus))
+            if (status != null && !Enum.TryParse(status.ToUpper(), out txStatus))
                 return new BadRequestObjectResult(new { error = $"Invalid status : {status}" });
 
             var queryResult = await transactionQueries.GetTransactionsAsync(
