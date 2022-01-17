@@ -40,8 +40,8 @@ namespace Application.Tests
             var queries = new TransactionQueries(session);
 
             var transactions = await queries.GetTransactionsAsync(
-                new DateTime(2022, 1, 15, 0, 0, 0),
-                new DateTime(2022, 1, 16, 0, 0, 0));
+                startDate: new DateTime(2022, 1, 15, 0, 0, 0),
+                endDate: new DateTime(2022, 1, 16, 0, 0, 0));
 
             Assert.Equal(1, transactions.Count);
         }
@@ -54,9 +54,37 @@ namespace Application.Tests
             var queries = new TransactionQueries(session);
 
             var transactions = await queries.GetTransactionsAsync(
-                TransactionStatus.A);
+                status: TransactionStatus.A);
 
             Assert.Equal(1, transactions.Count);
+        }
+
+        [Fact]
+        public async Task WhenQueryByCurrencyCodeAndStatus_ShouldGetOnlyCorrespondingTransaction()
+        {
+            var store = new DocumentStore(storeOptions);
+            var session = store.LightweightSession();
+            var queries = new TransactionQueries(session);
+
+            var transactions = await queries.GetTransactionsAsync(
+                currencyCode: new CurrencyCode("THB"),
+                status: TransactionStatus.A);
+
+            Assert.Equal(1, transactions.Count);
+        }
+
+        [Fact]
+        public async Task WhenQueryNotExisted_ShouldGetEmptyResult()
+        {
+            var store = new DocumentStore(storeOptions);
+            var session = store.LightweightSession();
+            var queries = new TransactionQueries(session);
+
+            var transactions = await queries.GetTransactionsAsync(
+                currencyCode: new CurrencyCode("AAA"),
+                status: TransactionStatus.A);
+
+            Assert.Equal(0, transactions.Count);
         }
     }
 }

@@ -2,13 +2,9 @@
 {
     public class TransactionViewModel
     {
-        public string? TransactionID { get; set; }
+        public string? ID { get; set; }
 
-        public decimal? Amount { get; set; }
-
-        public string? CurrencyCode { get; set; }
-
-        public DateTime? TransactionDate { get; set; }
+        public string? Payment { get; set; }
 
         public String? Status { get; set; }
     }

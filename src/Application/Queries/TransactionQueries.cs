@@ -1,6 +1,6 @@
 ﻿using Domain;
+using LinqKit;
 using Marten;
-using System.Linq.Expressions;
 
 namespace Application.Queries
 {
@@ -13,42 +13,41 @@ namespace Application.Queries
             this.session = session;
         }
 
-        private static readonly Expression<Func<Transaction, TransactionViewModel>> mapper =
+        private static readonly Func<Transaction, TransactionViewModel> mapper =
             (Transaction tx) =>
             new TransactionViewModel()
             {
-                TransactionID = tx.TransactionID,
-                TransactionDate = tx.TransactionDate,
-                Amount = tx.Amount.Value,
+                ID = tx.TransactionID,
+                Payment = $"{tx.Amount.Value:0.00} {tx.CurrencyCode.Value}",
+                Status = tx.Status.ToString(),
             };
 
         public async Task<IReadOnlyList<TransactionViewModel>> GetTransactionsAsync(
-            CurrencyCode currencyCode)
+            CurrencyCode? currencyCode = null,
+            DateTime? startDate = null,
+            DateTime? endDate = null,
+            TransactionStatus? status = null)
         {
-            var transactions = await session.Query<Transaction>()
-                .Where(tx => tx.CurrencyCode.Value == currencyCode.Value)
-                .Select(mapper)
-                .ToListAsync();
-            return transactions;
-        }
+            var predicate = PredicateBuilder.New<Transaction>();
 
-        public async Task<IReadOnlyList<TransactionViewModel>> GetTransactionsAsync(
-            DateTime startDate, DateTime endDate)
-        {
-            var transactions = await session.Query<Transaction>()
-                .Where(tx => tx.TransactionDate >= startDate && tx.TransactionDate <= endDate)
-                .Select(mapper)
-                .ToListAsync();
-            return transactions;
-        }
+            if (currencyCode != null)
+                predicate = predicate.And(tx => tx.CurrencyCode.Value == currencyCode.Value.Value);
 
-        public async Task<IReadOnlyList<TransactionViewModel>> GetTransactionsAsync(
-            TransactionStatus status)
-        {
+            if (startDate != null)
+                predicate = predicate.And(tx => tx.TransactionDate >= startDate.Value);
+
+            if (endDate != null)
+                predicate = predicate.And(tx => tx.TransactionDate <= endDate.Value);
+
+            if (status != null)
+                predicate = predicate.And(tx => tx.Status == status.Value);
+            
             var transactions = await session.Query<Transaction>()
-                .Where(tx => tx.Status == status)
+                .Where(predicate)
+                .ToAsyncEnumerable()
                 .Select(mapper)
                 .ToListAsync();
+
             return transactions;
         }
     }

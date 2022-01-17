@@ -4,8 +4,10 @@ namespace Application.Queries
 {
     public interface ITransactionQueries
     {
-        Task<IReadOnlyList<TransactionViewModel>> GetTransactionsAsync(CurrencyCode currencyCode);
-        Task<IReadOnlyList<TransactionViewModel>> GetTransactionsAsync(DateTime startDate, DateTime endDate);
-        Task<IReadOnlyList<TransactionViewModel>> GetTransactionsAsync(TransactionStatus status);
+        Task<IReadOnlyList<TransactionViewModel>> GetTransactionsAsync(
+            CurrencyCode? currencyCode = null,
+            DateTime? startDate = null,
+            DateTime? endDate = null,
+            TransactionStatus? status = null);
     }
 }
