@@ -1,6 +1,12 @@
 # TransactionData
 Software Architect Technical Assignment
 
+## Notes
+- If data with same transaction ID has been uploaded again with different amount, currency or date, it will replace the old data (upsert)
+- To build the project you must install .NET6 SDK
+- The WebApp project is the startup project
+- To run the project you must have PostgreSQL running or you can run a container by use docker-compose.yml in src folder)
+
 ## Architecture
 - Domain Driven Design
   
