@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.Serialization;
 
 namespace Domain
 {
@@ -32,14 +27,6 @@ namespace Domain
             _domainEvents ??= new List<IDomainEvent>();
 
             this._domainEvents.Add(domainEvent);
-        }
-
-        protected void CheckRule(IBusinessRule rule)
-        {
-            if (rule.IsBroken())
-            {
-                throw new BusinessRuleValidationException(rule);
-            }
         }
     }
 }

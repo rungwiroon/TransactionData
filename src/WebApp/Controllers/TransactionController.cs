@@ -1,5 +1,5 @@
 ﻿using Application.Queries;
-using Domain;
+using Domain.TransactionDomain.AggregateModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApp.Controllers

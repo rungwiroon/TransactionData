@@ -1,5 +1,5 @@
 using Application.Queries;
-using Domain;
+using Domain.TransactionDomain.AggregateModel;
 using Infrastructure;
 using Marten;
 using System;
@@ -81,7 +81,7 @@ namespace Application.Tests
             var queries = new TransactionQueries(session);
 
             var transactions = await queries.GetTransactionsAsync(
-                currencyCode: new CurrencyCode("AAA"),
+                currencyCode: new CurrencyCode("ALL"),
                 status: TransactionStatus.A);
 
             Assert.Equal(0, transactions.Count);

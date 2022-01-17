@@ -6,8 +6,6 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-
     
     <form method="post" enctype="multipart/form-data">
         <div>
@@ -17,5 +15,12 @@
         
         <input type="submit" />
     </form>
+
+    @if(Model.RowCount != null)
+    {
+        var text = $"{Model.RowCount} transaction(s) imported";
+        <p>@text</p>
+    }
+    
  
 </div>

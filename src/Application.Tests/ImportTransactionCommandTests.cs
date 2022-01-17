@@ -56,7 +56,7 @@ namespace Application.Tests
                 Right: _ => null,
                 Left: errors => errors);
 
-            Assert.Equal(3, errors.Count());
+            Assert.Equal(4, errors.Count());
         }
 
         [Fact]
@@ -106,7 +106,7 @@ namespace Application.Tests
                 Right: _ => null,
                 Left: errors => errors);
 
-            Assert.Equal(3, errors.Count());
+            Assert.Equal(4, errors.Count());
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Domain;
+﻿using Domain.TransactionDomain.AggregateModel;
 using LinqKit;
 using Marten;
 
@@ -18,7 +18,7 @@ namespace Application.Queries
             new TransactionViewModel()
             {
                 ID = tx.TransactionID,
-                Payment = $"{tx.Amount.Value:0.00} {tx.CurrencyCode.Value}",
+                Payment = $"{tx.Amount.Value:0.00} {tx.Amount.Currency.Value}",
                 Status = tx.Status.ToString(),
             };
 
@@ -31,7 +31,7 @@ namespace Application.Queries
             var predicate = PredicateBuilder.New<Transaction>();
 
             if (currencyCode != null)
-                predicate = predicate.And(tx => tx.CurrencyCode.Value == currencyCode.Value.Value);
+                predicate = predicate.And(tx => tx.Amount.Currency.Value == currencyCode.Value.Value);
 
             if (startDate != null)
                 predicate = predicate.And(tx => tx.TransactionDate >= startDate.Value);

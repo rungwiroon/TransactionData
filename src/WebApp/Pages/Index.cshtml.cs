@@ -11,7 +11,6 @@ namespace WebApp.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly IHostEnvironment _environment;
         private readonly ILogger<IndexModel> _logger;
         private readonly IMediator _mediator;
 
@@ -21,23 +20,25 @@ namespace WebApp.Pages
         [AllowedExtensions(new string[] { ".csv", ".xml" })]
         public IFormFile? Upload { get; set; }
 
+        public int? RowCount { get; set; }
+
         public IndexModel(
-            IHostEnvironment environment,
             ILogger<IndexModel> logger,
             IMediator mediator)
         {
-            _environment = environment;
             _logger = logger;
             _mediator = mediator;
         }
 
         public void OnGet()
         {
-
+            RowCount = null;
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
+            RowCount = null;
+
             if (!ModelState.IsValid || Upload is null)
                 return new PageResult();
 
@@ -72,12 +73,23 @@ namespace WebApp.Pages
                 return await commandCreationResult.MatchAsync(
                     RightAsync: async req =>
                     {
-                        await _mediator.Send(req);
-                        return (IActionResult)new RedirectToPageResult("Index");
+                        var res = await _mediator.Send(req);
+
+                        return res.Match(
+                            Right: rowCount =>
+                            {
+                                RowCount = rowCount;
+                                return (IActionResult)new PageResult();
+                            },
+                            Left: domainErrors =>
+                            {
+                                TempData["errorsList"] = JsonSerializer.Serialize(domainErrors);
+                                return StatusCode(400);
+                            });
                     },
-                    Left: errors =>
+                    Left: cmdErrors =>
                     {
-                        TempData["errorsList"] = JsonSerializer.Serialize(errors);
+                        TempData["errorsList"] = JsonSerializer.Serialize(cmdErrors);
                         return StatusCode(400);
                     });
             }
@@ -98,10 +110,30 @@ namespace WebApp.Pages
                     return StatusCode(422);
                 }
 
-                var request = ImportXmlFileCommand.Create(transactions);
-                await _mediator.Send(request);
+                var commandCreationResult = ImportXmlFileCommand.Create(transactions);
 
-                return new RedirectToPageResult("Index");
+                return await commandCreationResult.MatchAsync(
+                    RightAsync: async req =>
+                    {
+                        var res = await _mediator.Send(req);
+
+                        return res.Match(
+                            Right: rowCount =>
+                            {
+                                RowCount = rowCount;
+                                return (IActionResult)new PageResult();
+                            },
+                            Left: domainErrors =>
+                            {
+                                TempData["errorsList"] = JsonSerializer.Serialize(domainErrors);
+                                return StatusCode(400);
+                            });
+                    },
+                    Left: cmdErrors =>
+                    {
+                        TempData["errorsList"] = JsonSerializer.Serialize(cmdErrors);
+                        return StatusCode(400);
+                    });
             }
         }
     }

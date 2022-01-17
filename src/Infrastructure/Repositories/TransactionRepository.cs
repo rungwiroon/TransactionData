@@ -1,4 +1,4 @@
-﻿using Domain;
+﻿using Domain.TransactionDomain.AggregateModel;
 using Marten;
 
 namespace Infrastructure.Repositories

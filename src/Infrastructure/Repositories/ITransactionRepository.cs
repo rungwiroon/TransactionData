@@ -1,4 +1,4 @@
-﻿using Domain;
+﻿using Domain.TransactionDomain.AggregateModel;
 
 namespace Infrastructure.Repositories
 {

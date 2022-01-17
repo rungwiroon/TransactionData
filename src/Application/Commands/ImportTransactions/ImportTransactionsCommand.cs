@@ -26,7 +26,8 @@ namespace Application.Commands.ImportTransactions
         {
             RuleFor(tx => tx.TransactionID)
                 .NotNull()
-                .NotEmpty();
+                .NotEmpty()
+                .Length(5, 50);
 
             RuleFor(tx => tx.Amount)
                 .NotNull();
@@ -93,7 +94,8 @@ namespace Application.Commands.ImportTransactions
             });
     }
 
-    public class ImportCsvFileCommand : ImportFileCommand, ICommand, IRequest<bool>
+    public class ImportCsvFileCommand 
+        : ImportFileCommand, ICommand, IRequest<Either<IEnumerable<string>, int>>
     {
         private ImportCsvFileCommand(IEnumerable<TransactionItemDTO> items)
         {
@@ -112,7 +114,8 @@ namespace Application.Commands.ImportTransactions
         }
     }
 
-    public class ImportXmlFileCommand : ImportFileCommand, ICommand, IRequest<bool>
+    public class ImportXmlFileCommand
+        : ImportFileCommand, ICommand, IRequest<Either<IEnumerable<string>, int>>
     {
         private ImportXmlFileCommand(IEnumerable<TransactionItemDTO> items)
         {

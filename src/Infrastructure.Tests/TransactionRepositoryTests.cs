@@ -1,4 +1,4 @@
-using Domain;
+using Domain.TransactionDomain.AggregateModel;
 using Infrastructure.Repositories;
 using Marten;
 using System;
@@ -28,8 +28,7 @@ namespace Infrastructure.Tests
             {
                 new Transaction(
                     "1",
-                    new TransactionAmount(100.0m),
-                    new CurrencyCode("THB"),
+                    new TransactionAmount(100.0m, new CurrencyCode("THB")),
                     new DateTime(2022, 1, 15, 0, 0, 0),
                     TransactionStatus.A),
             };
@@ -40,14 +39,13 @@ namespace Infrastructure.Tests
             var documents1 = await session.Query<Transaction>().ToListAsync();
 
             Assert.Equal(1, documents1.Count);
-            Assert.Equal(new TransactionAmount(100.0m), documents1[0].Amount);
+            Assert.Equal(new TransactionAmount(100.0m, new CurrencyCode("THB")), documents1[0].Amount);
 
             var transactions2 = new Transaction[]
             {
                 new Transaction(
                     "1",
-                    new TransactionAmount(200.0m),
-                    new CurrencyCode("THB"),
+                    new TransactionAmount(200.0m, new CurrencyCode("THB")),
                     new DateTime(2022, 1, 15, 0, 0, 0),
                     TransactionStatus.A),
             };
@@ -58,7 +56,7 @@ namespace Infrastructure.Tests
             var documents2 = await session.Query<Transaction>().ToListAsync();
 
             Assert.Equal(1, documents2.Count);
-            Assert.Equal(new TransactionAmount(200.0m), documents2[0].Amount);
+            Assert.Equal(new TransactionAmount(200.0m, new CurrencyCode("THB")), documents2[0].Amount);
         }
     }
 }
