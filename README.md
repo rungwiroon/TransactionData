@@ -26,7 +26,12 @@ I've chosen to use [Marten](https://github.com/JasperFx/marten) as peristence fr
 Just a normal razor pages with custom file validation from StackOverflow and some custom error pages.
 
 ## WebAPI
-Nothing special.
+### Endpoint
+- api/transaction
+  - query params
+    - currencyCode
+    - start, end (datetime)
+    - status
 
 ## Additional libraries
 - [CsvReader](https://github.com/JoshClose/CsvHelper)
